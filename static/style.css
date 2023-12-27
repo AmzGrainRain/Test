@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'LXGW Neo XiHei' !important;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #7e81be;
+  background-image: radial-gradient(closest-side, rgba(169, 201, 255, 1), rgba(255, 187, 236, 0)),
+    radial-gradient(closest-side, rgba(116, 235, 213, 1), rgba(244, 208, 63, 0)),
+    radial-gradient(closest-side, rgba(250, 172, 168, 1), rgba(82, 172, 255, 0)),
+    radial-gradient(closest-side, rgba(181, 255, 252, 1), rgba(255, 222, 233, 0)),
+    radial-gradient(closest-side, rgba(217, 175, 217, 1), rgba(151, 217, 225, 0));
+  background-size: 130vmax 130vmax, 80vmax 80vmax, 90vmax 90vmax, 110vmax 110vmax, 90vmax 90vmax;
+  background-position: -80vmax -80vmax, 60vmax -30vmax, 10vmax 10vmax, -30vmax -10vmax,
+    50vmax 50vmax;
+  background-repeat: no-repeat;
+  animation: 12s ani linear infinite;
+}
+
+@keyframes ani {
+  0%,
+  100% {
+    background-size: 130vmax 130vmax, 80vmax 80vmax, 90vmax 90vmax, 110vmax 110vmax, 90vmax 90vmax;
+    background-position: -80vmax -80vmax, 60vmax -30vmax, 10vmax 10vmax, -30vmax -10vmax,
+      50vmax 50vmax;
+  }
+  25% {
+    background-size: 100vmax 100vmax, 90vmax 90vmax, 100vmax 100vmax, 90vmax 90vmax, 60vmax 60vmax;
+    background-position: -60vmax -80vmax, 50vmax -30vmax, 0vmax 10vmax, -40vmax 0vmax, 60vmax 60vmax;
+  }
+}
+
+.hover {
+  transition: 0.3s;
+}
+.hover:hover {
+  background-color: #fff;
+}
+
+nav {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 4rem;
+  font-size: small;
+
+  span.motd {
+    padding: 0.5rem 1rem;
+    cursor: default;
+  }
+
+  & input {
+    padding: 0.4rem 1rem;
+    background-color: #fff3;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+div.content {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 70%;
+  height: calc(100% - 4rem);
+
+  & p.onlines {
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    text-align: center;
+    background-color: #fff;
+  }
+
+  & ul.messages {
+    margin: 0 auto;
+    padding: 0.5rem;
+    list-style: none;
+    width: 100%;
+    height: 50%;
+    overflow-y: auto;
+    background-color: #fff3;
+    backdrop-filter: blur(2rem);
+
+    & li {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      background-color: #fff3;
+      transition: 0.3s;
+
+      & span {
+        padding-bottom: 0.2rem;
+        font-size: small;
+      }
+    }
+
+    & li:last-child {
+      margin-bottom: 0;
+    }
+
+    & li:hover {
+      background-color: #fff;
+    }
+  }
+
+  & div.send {
+    display: flex;
+    width: 100%;
+    height: 3rem;
+
+    & input[type=text] {
+      padding: 0 1rem;
+      display: inline-block;
+      width: calc(100% - 8rem);
+      height: 100%;
+      border: none;
+      outline: none;
+      background-color: #fffa;
+    }
+
+    & input[type=button] {
+      width: 8rem;
+      border: none;
+      border-left: 1px solid #ccc;
+      background-color: #fffa;
+      cursor: pointer;
+    }
+  }
+}

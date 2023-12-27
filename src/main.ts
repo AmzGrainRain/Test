@@ -32,6 +32,17 @@ const pool = createDatabaseConnectionPool({
 const app = express()
 const httpServer = createHttpServer(app)
 const socketServer = new SocketServer(httpServer)
+const socketClients: any[] = []
+socketServer.on('connection', (socket: any) => {
+  if (!socket.request.session?.authorized) {
+    socket.disconnect()
+    return
+  }
+  socketClients.push(socket)
+  setInterval(() => {
+    socket.emit('online', socketClients.length)
+  }, 1000)
+})
 
 // middleware
 app.use(
