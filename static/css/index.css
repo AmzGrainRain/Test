@@ -1,3 +1,8 @@
+@import url('./nav.css');
+@import url('./login.css');
+@import url('./register.css');
+@import url('./chat.css');
+
 * {
   margin: 0;
   padding: 0;
@@ -41,96 +46,16 @@ body {
   background-color: #fff;
 }
 
-nav {
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 4rem;
-  font-size: small;
-
-  span.motd {
-    padding: 0.5rem 1rem;
-    cursor: default;
-  }
-
-  & input {
-    padding: 0.4rem 1rem;
-    background-color: #fff3;
-    border: none;
-    cursor: pointer;
-  }
+.pointer {
+  cursor: pointer;
 }
 
-div.content {
-  margin: 0 auto;
+main {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   height: calc(100% - 4rem);
-
-  & p.onlines {
-    width: 100%;
-    height: 3rem;
-    line-height: 3rem;
-    text-align: center;
-    background-color: #fff;
-  }
-
-  & ul.messages {
-    margin: 0 auto;
-    padding: 0.5rem;
-    list-style: none;
-    width: 100%;
-    height: 50%;
-    overflow-y: auto;
-    background-color: #fff3;
-    backdrop-filter: blur(2rem);
-
-    & li {
-      margin-bottom: 0.5rem;
-      padding: 0.5rem;
-      background-color: #fff3;
-      transition: 0.3s;
-
-      & span {
-        padding-bottom: 0.2rem;
-        font-size: small;
-      }
-    }
-
-    & li:last-child {
-      margin-bottom: 0;
-    }
-
-    & li:hover {
-      background-color: #fff;
-    }
-  }
-
-  & div.send {
-    display: flex;
-    width: 100%;
-    height: 3rem;
-
-    & input[type=text] {
-      padding: 0 1rem;
-      display: inline-block;
-      width: calc(100% - 8rem);
-      height: 100%;
-      border: none;
-      outline: none;
-      background-color: #fffa;
-    }
-
-    & input[type=button] {
-      width: 8rem;
-      border: none;
-      border-left: 1px solid #ccc;
-      background-color: #fffa;
-      cursor: pointer;
-    }
-  }
 }
+

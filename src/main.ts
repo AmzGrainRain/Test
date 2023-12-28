@@ -4,79 +4,90 @@ import express from 'express'
 import session from 'express-session'
 declare module 'express-session' {
   interface SessionData {
-    authorized?: boolean,
-    uid?: string,
+    authorized?: boolean
+    uid?: string
     captcha?: string
   }
 }
 import compression from 'compression'
 import { createStream as rfscs } from 'rotating-file-stream'
 import morgan from 'morgan'
+morgan.token('time', (): string => getCurrentDateTime().replace(' ', '_').replace(':', '-'))
 import { Server as SocketServer } from 'socket.io'
 import { getCurrentDateTime } from './utils'
 import { Routes } from './route/api'
 
-// config
 const port = 3000
 const logDirectory = './logs'
-const logFormat = '[:time] [:method] [:url :status :response-time ms :total-time ms] -> [:remote-addr]'
-morgan.token('time', (): string => getCurrentDateTime().replace(' ', '_').replace(':', '-'))
+const logFormat =
+  '[:time] [:method] [:url :status :response-time ms :total-time ms] -> [:remote-addr]'
 
-// initial
+/**
+ * Database Connection Pool
+ */
 const pool = createDatabaseConnectionPool({
   host: '127.0.0.1',
   user: 'root',
   password: '123123',
+  database: 'chat',
   connectionLimit: 20
 })
+
+/**
+ * HTTP Server
+ */
 const app = express()
 const httpServer = createHttpServer(app)
+
+/**
+ * Socket Server
+ */
 const socketServer = new SocketServer(httpServer)
-const socketClients: any[] = []
+const socketClients = new Map<string, any>()
 socketServer.on('connection', (socket: any) => {
   if (!socket.request.session?.authorized) {
     socket.disconnect()
     return
   }
-  socketClients.push(socket)
+  socketClients.set(socket.id, socket)
   setInterval(() => {
-    socket.emit('online', socketClients.length)
+    socket.emit('online', socketClients.size)
   }, 1000)
 })
+socketServer.on('disconnect', (socket: any) => {})
 
-// middleware
-app.use(
-  morgan(logFormat, {
-    stream: rfscs('access.log', {
-      size: '10M',
-      interval: '1d',
-      compress: 'gzip',
-      path: logDirectory
-    })
-  })
-)
-app.use(
-  session({
-    secret: '123',
-    name: 'test',
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-      httpOnly: true,
-      maxAge: 1000 * 1800, // 1000ms * 1800 = 30min
-      secure: true
-    }
-  })
-)
+/**
+ * Middleware
+ */
+const rfss = rfscs('access.log', {
+  size: '10M',
+  interval: '1d',
+  compress: 'gzip',
+  path: logDirectory
+})
+const sessionOptions = {
+  secret: '123',
+  name: 'test',
+  resave: true,
+  saveUninitialized: false,
+  rolling: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 1800, // 1000ms * 1800 = 30min
+    secure: true
+  }
+}
+app.use(morgan(logFormat, { stream: rfss }))
+app.use(session(sessionOptions))
 app.use(compression())
 app.use('/', express.static('./static'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-socketServer.use((middleware: any) => (socket: any, next: any) => middleware(socket.request, {}, next))
+socketServer.use(
+  (middleware: any) => (socket: any, next: any) => middleware(socket.request, {}, next)
+)
 app.use('/api', Routes(pool))
 
-// listening port
 httpServer.listen(port, () => {
   console.log(`Server running at http://127.0.0.1:3000`)
 })
